@@ -578,7 +578,7 @@ static struct mipi_dsim_config dsim_info = {
 	.s = 2,
 
 	/* D-PHY PLL stable time spec :min = 200usec ~ max 400usec */
-	.pll_stable_time = DPHY_PLL_STABLE_TIME,
+	.pll_stable_time = 500,
 
 	.esc_clk = 7 * 1000000, /* escape clk : 7MHz */
 
@@ -611,7 +611,7 @@ static struct mipi_dsim_config dsim_info = {
 	.s = 0,
 
 	/* D-PHY PLL stable time spec :min = 200usec ~ max 400usec */
-	.pll_stable_time = DPHY_PLL_STABLE_TIME,
+	.pll_stable_time = 500,
 
 	.esc_clk = 7 * 1000000, /* escape clk : 7MHz */
 
@@ -639,7 +639,7 @@ static struct mipi_dsim_config dsim_info = {
 	.s = 0,
 
 	/* D-PHY PLL stable time spec :min = 200usec ~ max 400usec */
-	.pll_stable_time = DPHY_PLL_STABLE_TIME,
+	.pll_stable_time = 500,
 
 	.esc_clk = 8 * MHZ, /* escape clk : 8MHz */
 
@@ -672,7 +672,7 @@ static struct mipi_dsim_config dsim_info = {
 	.s = 0,
 
 	/* D-PHY PLL stable time spec :min = 200usec ~ max 400usec */
-	.pll_stable_time = DPHY_PLL_STABLE_TIME,
+	.pll_stable_time = 500,
 
 	.esc_clk = 7 * 1000000, /* escape clk : 7MHz */
 

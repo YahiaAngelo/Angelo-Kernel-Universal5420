@@ -211,6 +211,10 @@ static bool sec_bat_check_jig_status(void)
 
 }
 
+int mhl_class_usb = 300;
+int mhl_class_500 = 400;
+int mhl_class_900 = 700;
+int mhl_class_1500 = 1300;
 
 static int sec_bat_get_cable_from_extended_cable_type(
 	int input_extended_cable_type)
@@ -275,23 +279,23 @@ static int sec_bat_get_cable_from_extended_cable_type(
 				break;
 			case ONLINE_POWER_TYPE_MHL_500:
 				cable_type = POWER_SUPPLY_TYPE_MISC;
-				charge_current_max = 400;
-				charge_current = 400;
+				charge_current_max = mhl_class_500;
+				charge_current = mhl_class_500;
 				break;
 			case ONLINE_POWER_TYPE_MHL_900:
 				cable_type = POWER_SUPPLY_TYPE_MISC;
-				charge_current_max = 700;
-				charge_current = 700;
+				charge_current_max = mhl_class_900;
+				charge_current = mhl_class_900;
 				break;
 			case ONLINE_POWER_TYPE_MHL_1500:
 				cable_type = POWER_SUPPLY_TYPE_MISC;
-				charge_current_max = 1300;
-				charge_current = 1300;
+				charge_current_max = mhl_class_1500;
+				charge_current = mhl_class_1500;
 				break;
 			case ONLINE_POWER_TYPE_USB:
 				cable_type = POWER_SUPPLY_TYPE_USB;
-				charge_current_max = 300;
-				charge_current = 300;
+				charge_current_max = mhl_class_usb;
+				charge_current = mhl_class_usb;
 				break;
 			default:
 				cable_type = cable_main;
@@ -494,10 +498,10 @@ static sec_bat_adc_region_t cable_adc_value_table[] = {
 };
 
 static int polling_time_table[] = {
-	10,	/* BASIC */
-	30,	/* CHARGING */
-	30,	/* DISCHARGING */
-	30,	/* NOT_CHARGING */
+	60,	/* BASIC */
+	60,	/* CHARGING */
+	60,	/* DISCHARGING */
+	60,	/* NOT_CHARGING */
 	3600,	/* SLEEP */
 };
 
@@ -645,7 +649,7 @@ sec_battery_platform_data_t sec_battery_pdata = {
 #if defined(CONFIG_MACH_J_CHN_CTC)
 	.full_condition_vcell = 4150,
 #else
-	.full_condition_vcell = 4250,
+	.full_condition_vcell = 4300,
 #endif
 
 	.recharge_check_count = 2,
@@ -705,7 +709,7 @@ struct platform_device sec_device_fg = {
 };
 
 static struct i2c_board_info sec_brdinfo_fg[] __initdata = {
-#if !defined(CONFIG_MFD_MAX77803) && !defined(CONFIG_MFD_MAX77888)
+#if !defined(CONFIG_MFD_MAX77803)
 	{
 		I2C_BOARD_INFO("sec-charger",
 			SEC_CHARGER_I2C_SLAVEADDR),
