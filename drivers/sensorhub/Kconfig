@@ -1,0 +1,5 @@
+#
+# Kconfig for the sensor hub.
+#
+
+source "drivers/sensorhub/stm/Kconfig"

@@ -1,0 +1,6 @@
+config SND_SAMSUNG_RP_DEBUG
+	bool "Enable debug message for ALP Audio"
+	depends on SND_SAMSUNG_ALP
+	help
+	  Say Y if you want to add debug message for ALP Audio.
+
