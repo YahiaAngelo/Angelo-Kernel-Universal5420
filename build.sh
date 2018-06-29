@@ -37,7 +37,7 @@ RDIR=$(pwd)
 VER=$(cat "$RDIR/VERSION")
 
 # directory containing cross-compile armhf toolchain
-TOOLCHAIN=$HOME/gcc-linaro-4.9.4-2017.01-x86_64_arm-linux-gnueabihf
+TOOLCHAIN=~/gcc-linaro
 
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 # amount of cpu threads to use in kernel make process
@@ -52,7 +52,7 @@ ABORT()
 }
 
 export ARCH=arm
-export CROSS_COMPILE=$TOOLCHAIN/bin/arm-linux-gnueabihf-
+export CROSS_COMPILE=$TOOLCHAIN/bin/arm-linux-gnueabi-
 
 [ -x "${CROSS_COMPILE}gcc" ] ||
 ABORT "Unable to find gcc cross-compiler at location: ${CROSS_COMPILE}gcc"
@@ -61,7 +61,8 @@ ABORT "Unable to find gcc cross-compiler at location: ${CROSS_COMPILE}gcc"
 [ "$1" ] && DEVICE=$1
 [ "$2" ] && VARIANT=$2
 [ "$DEVICE" ] || DEVICE=Note3
-[ "$VARIANT" ] || VARIANT=V1
+[ "$VARIANT" ] || VARIANT=V2
+[ $MODEL = ha3g ]
 
 DEFCONFIG=${TARGET}_defconfig
 DEVICE_DEFCONFIG=device_${DEVICE}_${VARIANT}
@@ -117,10 +118,59 @@ INSTALL_MODULES() {
 	rm build/lib/modules/*/build build/lib/modules/*/source
 }
 
+FUNC_BUILD_RAMDISK()
+{
+	mv $RDIR/arch/$ARCH/boot/zImage $RDIR/arch/$ARCH/boot/boot.img-zImage
+
+	case $MODEL in
+	chagalllte)
+		rm -f $RDIR/ramdisk/SM-T805/split_img/boot.img-zImage
+		mv -f $RDIR/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-T805/split_img/boot.img-zImage
+		cd $RDIR/ramdisk/SM-T805
+		./repackimg.sh
+		echo SEANDROIDENFORCE >> image-new.img
+		;;
+	chagallwifi)
+		rm -f $RDIR/ramdisk/SM-T800/split_img/boot.img-zImage
+		mv -f $RDIR/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-T800/split_img/boot.img-zImage
+		cd $RDIR/ramdisk/SM-T800
+		./repackimg.sh
+		echo SEANDROIDENFORCE >> image-new.img
+		;;
+	klimtlte)
+		rm -f $RDIR/ramdisk/SM-T705/split_img/boot.img-zImage
+		mv -f $RDIR/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-T705/split_img/boot.img-zImage
+		cd $RDIR/ramdisk/SM-T705
+		./repackimg.sh
+		echo SEANDROIDENFORCE >> image-new.img
+		;;
+	ha3g)
+		rm -f $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
+		mv -f $RDIR/build/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
+		cd $RDIR/ramdisk/SM-N900
+		./repackimg.sh
+		echo SEANDROIDENFORCE >> image-new.img
+		;;
+	klimtwifi)
+		rm -f $RDIR/ramdisk/SM-T700/split_img/boot.img-zImage
+		mv -f $RDIR/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-T700/split_img/boot.img-zImage
+		cd $RDIR/ramdisk/SM-T700
+		./repackimg.sh
+		echo SEANDROIDENFORCE >> image-new.img
+		;;
+	*)
+		echo "Unknown device: $MODEL"
+		exit 1
+		;;
+	esac
+}
+
+
 cd "$RDIR" || ABORT "Failed to enter $RDIR!"
 
 CLEAN_BUILD &&
 SETUP_BUILD &&
 BUILD_KERNEL &&
 INSTALL_MODULES &&
+FUNC_BUILD_RAMDISK &&
 echo "Finished building $LOCALVERSION!"
