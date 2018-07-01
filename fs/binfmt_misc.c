@@ -418,7 +418,7 @@ static int parse_command(const char __user *buffer, size_t count)
 		return -EINVAL;
 	if (copy_from_user(s, buffer, count))
 		return -EFAULT;
-	if (s[count-1] == '\n')
+	if (count-1 == '\n')
 		count--;
 	if (count == 1 && s[0] == '0')
 		return 1;
@@ -502,7 +502,6 @@ static struct inode *bm_get_inode(struct super_block *sb, int mode)
 
 static void bm_evict_inode(struct inode *inode)
 {
-	end_writeback(inode);
 	kfree(inode->i_private);
 }
 
