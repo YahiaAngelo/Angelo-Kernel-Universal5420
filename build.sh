@@ -37,7 +37,7 @@ RDIR=$(pwd)
 VER=$(cat "$RDIR/VERSION")
 
 # directory containing cross-compile armhf toolchain
-TOOLCHAIN=~/gcc-linaro
+TOOLCHAIN=~/gcc-linaro-4.10
 
 CPU_THREADS=$(grep -c "processor" /proc/cpuinfo)
 # amount of cpu threads to use in kernel make process
@@ -52,7 +52,7 @@ ABORT()
 }
 
 export ARCH=arm
-export CROSS_COMPILE=$TOOLCHAIN/bin/arm-linux-gnueabi-
+export CROSS_COMPILE=$TOOLCHAIN/bin/arm-eabi-
 
 [ -x "${CROSS_COMPILE}gcc" ] ||
 ABORT "Unable to find gcc cross-compiler at location: ${CROSS_COMPILE}gcc"
@@ -62,7 +62,7 @@ ABORT "Unable to find gcc cross-compiler at location: ${CROSS_COMPILE}gcc"
 [ "$2" ] && VARIANT=$2
 [ "$DEVICE" ] || DEVICE=Note3
 [ "$VARIANT" ] || VARIANT=V2
-[ $MODEL = ha3g ]
+[[ $MODEL = ha3g ]]
 
 DEFCONFIG=${TARGET}_defconfig
 DEVICE_DEFCONFIG=device_${DEVICE}_${VARIANT}
@@ -146,7 +146,7 @@ FUNC_BUILD_RAMDISK()
 		;;
 	ha3g)
 		rm -f $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
-		mv -f $RDIR/build/arch/$ARCH/boot/boot.img-zImage $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
+		mv -f $RDIR/build/arch/$ARCH/boot/zImage $RDIR/ramdisk/SM-N900/split_img/boot.img-zImage
 		cd $RDIR/ramdisk/SM-N900
 		./repackimg.sh
 		echo SEANDROIDENFORCE >> image-new.img
